@@ -1,10 +1,18 @@
-import React from 'react'
+import React, { useMemo} from 'react'
 import Pluslcon from '../icons/Pluslcon'
 import { useState } from 'react';
-import { Column } from '../types';
+import { Column, Id } from '../types';
+import ColumnContainer from './ColumnContainer';
+import { DndContext, DragOverlay, DragStartEvent } from '@dnd-kit/core';
+import { SortableContext } from '@dnd-kit/sortable';
+import { createPortal } from 'react-dom';
 
 function KarbanBord() {
   const [columns, setColumns] = useState<Column[]>([]);
+  const columnsId = useMemo(() => columns.map((col) => col.id),
+[columns]);
+
+  const[activeColumn, setActiveColumn] = useState<Column|null> (null);
 
   return (
     <div className='
@@ -18,11 +26,13 @@ function KarbanBord() {
     overflow-y-hidden
     px-[40px]
     '>
+      <DndContext onDragStart={onDragStart}>
       <div className='m-auto flex gap-4'>
         <div className='flex gap-4'>
+          <SortableContext items={columnsId}>
           {columns.map((col) =>(
-            <div>{col.title}</div>
-          ))}
+            <ColumnContainer key={col.id} column={col} deleteColumn={deleteColumn}/>
+          ))}</SortableContext>
         </div>
       <button onClick={()=>{
         createNewColumn()
@@ -32,19 +42,31 @@ function KarbanBord() {
     min-w-[350px]
     cursor-pointer
     rounded-lg
-    bg-slate-800
+    bg-[#2C3440]
     p-4
     border-amber-200
-    ring-rose-500
+    ring-[#29A19C]
     hover:ring-2
     flex
     gap-2
-    ">
-      <Pluslcon/>
+    
+    "><div className="
+    stroke-white
+    hover:stroke-[#29A19C]
+    "><Pluslcon/></div>
+      
     Hello world!
   </button>
       </div>
-    
+      {createPortal(
+          <DragOverlay>
+            {activeColumn && <ColumnContainer column={activeColumn}
+            deleteColumn={deleteColumn}
+            />}
+          </DragOverlay>,
+          document.body
+        )}
+      </DndContext>
   </div>
   );
   function createNewColumn(){
@@ -55,7 +77,21 @@ function KarbanBord() {
 
     setColumns([...columns, columnToAdd])
   }
+  function deleteColumn(id: Id) {
+    const filteredColumn = columns.filter((col) => col.id !== id);
+    setColumns(filteredColumn);
+  }
+  function onDragStart(event: DragStartEvent) {
+    if (event.active.data.current?.type === "Column") {
+      setActiveColumn(event.active.data.current.column)
+      return;
+    }
+  }
+  
 }
+
+
+
 
 function generateId() {
   return Math.floor(Math.random() * 10001);
