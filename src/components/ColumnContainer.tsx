@@ -2,16 +2,22 @@ import { useSortable } from "@dnd-kit/sortable";
 import DelIcon from "../icons/DelIcon";
 import { Column,  Id} from "../types"
 import {CSS} from "@dnd-kit/utilities"
+import { useState } from "react";
+
+
 
 interface Props {
     column: Column;
     deleteColumn: (id: Id) => void;
+    updateColumn: (id: Id, title: string) => void;
 }
 
 function ColumnContainer( props: Props) {
-    const {column, deleteColumn} = props;
+    const {column, deleteColumn, updateColumn} = props;
 
-    const {setNodeRef, attributes, listeners, transform, transition} = useSortable ({
+    const[editMode, setEditMode] = useState(false); 
+
+    const {setNodeRef, attributes, listeners, transform, transition, isDragging,} = useSortable ({
         id: column.id,
         data:{
             type: "Column",
@@ -24,6 +30,23 @@ function ColumnContainer( props: Props) {
         transform: CSS.Transform.toString(transform),
     };
 
+    if (isDragging) {
+        return <div ref={setNodeRef}
+        style = {style}
+        className="
+  h-[500px]
+    w-[350px]
+    opacity-40
+    min-h-[500px]
+    rounded-md
+    bg-[#2C3440]
+    border-2
+    border-[#29A19C]
+    
+    flex
+    flex-col
+  "></div>
+    }
     
   return <div 
   ref={setNodeRef}
@@ -43,8 +66,12 @@ function ColumnContainer( props: Props) {
     {/* column  title*/}
     
     <div
+    onClick={() => {
+        setEditMode(true)
+    }}
     {...attributes}
     {...listeners}
+    
     className="
     bg-gray-950
     h-[60px]
@@ -71,7 +98,17 @@ function ColumnContainer( props: Props) {
         text-sm
         rounded-full
         ">0</div>
-    {column.title}
+    {!editMode && column.title}
+    {editMode && (
+        <input 
+        value={column.title}
+        onChange={(e) => updateColumn(column.id, e.target.value)}
+        autoFocus
+        onBlur={() => {
+            setEditMode(false);
+        }} 
+        />
+    )}
     </div>
     <button 
     onClick={() => {
