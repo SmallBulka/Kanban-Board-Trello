@@ -1,7 +1,7 @@
-import React, { useMemo} from 'react'
+import { useMemo} from 'react'
 import Pluslcon from '../icons/Pluslcon'
 import { useState } from 'react';
-import { Column, Id } from '../types';
+import { Column, Id, Task } from '../types';
 import ColumnContainer from './ColumnContainer';
 import { DndContext, DragOverlay, DragStartEvent, DragEndEvent, useSensors, useSensor, PointerSensor } from '@dnd-kit/core';
 import { arrayMove, SortableContext } from '@dnd-kit/sortable';
@@ -11,6 +11,8 @@ function KarbanBord() {
   const [columns, setColumns] = useState<Column[]>([]);
   const columnsId = useMemo(() => columns.map((col) => col.id),
 [columns]);
+
+  const [tasks, setTasks] = useState<Task[]>([]);
 
   const[activeColumn, setActiveColumn] = useState<Column|null> (null);
 
@@ -41,7 +43,12 @@ function KarbanBord() {
         <div className='flex gap-4'>
           <SortableContext items={columnsId}>
           {columns.map((col) =>(
-            <ColumnContainer key={col.id} column={col} deleteColumn={deleteColumn} updateColumn={updateColumn}/>
+            <ColumnContainer key={col.id} column={col} 
+            deleteColumn={deleteColumn} 
+            updateColumn={updateColumn} 
+            createTask={createTask}
+            tasks={tasks.filter(task => task.columnId === col.id)}
+            />
           ))}</SortableContext>
         </div>
       <button onClick={()=>{
@@ -74,6 +81,7 @@ function KarbanBord() {
             {activeColumn && <ColumnContainer column={activeColumn}
             deleteColumn={deleteColumn}
             updateColumn={updateColumn}
+            createTask={createTask}
             />}
           </DragOverlay>,
           document.body
@@ -81,6 +89,17 @@ function KarbanBord() {
       </DndContext>
   </div>
   );
+
+  function createTask(columnId:Id){
+    const newTask: Task = {
+      id: generateId(),
+      columnId,
+      content: `Task ${tasks.length + 1}`
+    };
+  
+    setTasks([...tasks, newTask])
+  }
+
   function createNewColumn(){
     const columnToAdd: Column = {
       id: generateId(),
