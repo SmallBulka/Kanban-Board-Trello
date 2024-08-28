@@ -48,6 +48,7 @@ function KarbanBord() {
             updateColumn={updateColumn} 
             createTask={createTask}
             tasks={tasks.filter(task => task.columnId === col.id)}
+            deleteTask={deleteTask}
             />
           ))}</SortableContext>
         </div>
@@ -82,6 +83,8 @@ function KarbanBord() {
             deleteColumn={deleteColumn}
             updateColumn={updateColumn}
             createTask={createTask}
+            deleteTask={deleteTask}
+            tasks={tasks.filter((task) => task.columnId === activeColumn.id)}
             />}
           </DragOverlay>,
           document.body
@@ -108,6 +111,11 @@ function KarbanBord() {
 
     setColumns([...columns, columnToAdd])
   }
+function deleteTask(id: Id) {
+  const newTasks = tasks.filter(task =>task.id !== id);
+  setTasks(newTasks)
+}
+
   function deleteColumn(id: Id) {
     const filteredColumn = columns.filter((col) => col.id !== id);
     setColumns(filteredColumn);
