@@ -1,8 +1,8 @@
-import { useSortable } from "@dnd-kit/sortable";
+import { SortableContext, useSortable } from "@dnd-kit/sortable";
 import DelIcon from "../icons/DelIcon";
 import { Column,  Id, Task} from "../types"
 import {CSS} from "@dnd-kit/utilities"
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import Pluslcon from "../icons/Pluslcon";
 import TaskCard from "./TaskCard";
 
@@ -12,7 +12,7 @@ interface Props {
     column: Column;
     deleteColumn: (id: Id) => void;
     updateColumn: (id: Id, title: string) => void;
-
+    updateTask: (id: Id, content: string) => void;
     createTask: (columnId: Id) => void;
     deleteTask: (id: Id) => void;
     tasks: Task[];
@@ -20,7 +20,7 @@ interface Props {
 }
 
 function ColumnContainer( props: Props) {
-    const {column, deleteColumn, updateColumn, createTask, tasks, deleteTask} = props;
+    const {column, deleteColumn, updateColumn, createTask, tasks, deleteTask, updateTask} = props;
 
     const[editMode, setEditMode] = useState(false); 
 
@@ -32,6 +32,10 @@ function ColumnContainer( props: Props) {
         },
         disabled: editMode,
     });
+    const tasksIds = useMemo(() => {
+        return tasks.map((task) => task.id);
+    }, [tasks]);
+        
 
     const style = {
         transition,
@@ -142,10 +146,14 @@ function ColumnContainer( props: Props) {
     {/* column  task*/}
     <div className="flex flex-grow flex-col gap-4 p-2
     overflow-x-hidden overflow-y-auto
-    ">{
+    ">
+        <SortableContext items={tasksIds}>
+        {
         tasks.map((task) => (
-            <TaskCard key={task.id} task={task} deleteTask={deleteTask}/>
+            <TaskCard key={task.id} task={task} deleteTask={deleteTask} 
+            updateTask={updateTask}/>
         )) }
+        </SortableContext>
        </div> 
     {/* column  footer*/}
     

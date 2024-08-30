@@ -17,3 +17,6 @@ body,
 ::-webkit-scrollbar-thumb {
     @apply bg-[#29A19C] rounded-xl;
 }
+.task>::-webkit-scrollbar-thumb {
+    @apply bg-[#29A19C] rounded-xl;
+}

@@ -3,9 +3,10 @@ import Pluslcon from '../icons/Pluslcon'
 import { useState } from 'react';
 import { Column, Id, Task } from '../types';
 import ColumnContainer from './ColumnContainer';
-import { DndContext, DragOverlay, DragStartEvent, DragEndEvent, useSensors, useSensor, PointerSensor } from '@dnd-kit/core';
+import { DndContext, DragOverlay, DragStartEvent, DragEndEvent, useSensors, useSensor, PointerSensor, DragOverEvent } from '@dnd-kit/core';
 import { arrayMove, SortableContext } from '@dnd-kit/sortable';
 import { createPortal } from 'react-dom';
+import TaskCard from './TaskCard';
 
 function KarbanBord() {
   const [columns, setColumns] = useState<Column[]>([]);
@@ -16,7 +17,7 @@ function KarbanBord() {
 
   const[activeColumn, setActiveColumn] = useState<Column|null> (null);
 
-  
+  const[activeTask, setActiveTask] = useState<Task | null>(null)
 
   const sensors = useSensors(
     useSensor(PointerSensor , {
@@ -38,7 +39,12 @@ function KarbanBord() {
     overflow-y-hidden
     px-[40px]
     '>
-      <DndContext sensors={sensors} onDragStart={onDragStart} onDragEnd={onDragEnd}>
+      <DndContext 
+      sensors={sensors} 
+      onDragStart={onDragStart} 
+      onDragEnd={onDragEnd}
+      onDragOver={onDragOver}
+      >
       <div className='m-auto flex gap-4'>
         <div className='flex gap-4'>
           <SortableContext items={columnsId}>
@@ -49,6 +55,8 @@ function KarbanBord() {
             createTask={createTask}
             tasks={tasks.filter(task => task.columnId === col.id)}
             deleteTask={deleteTask}
+            updateTask={updateTask}
+            
             />
           ))}</SortableContext>
         </div>
@@ -84,8 +92,13 @@ function KarbanBord() {
             updateColumn={updateColumn}
             createTask={createTask}
             deleteTask={deleteTask}
+            updateTask={updateTask}
             tasks={tasks.filter((task) => task.columnId === activeColumn.id)}
             />}
+            {
+              activeTask&&<TaskCard task={activeTask}
+              deleteTask={deleteTask} updateTask={updateTask}/>
+            }
           </DragOverlay>,
           document.body
         )}
@@ -116,6 +129,14 @@ function deleteTask(id: Id) {
   setTasks(newTasks)
 }
 
+function updateTask(id: Id, content: string){
+  const newTasks = tasks.map((task)=> {
+if (task.id !== id) return task;
+return {...task,content};
+  });
+  setTasks(newTasks)
+}
+
   function deleteColumn(id: Id) {
     const filteredColumn = columns.filter((col) => col.id !== id);
     setColumns(filteredColumn);
@@ -129,40 +150,66 @@ function deleteTask(id: Id) {
     setColumns(newColumns);
   }
   function onDragStart(event: DragStartEvent) {
+    setActiveColumn(null)
+    setActiveTask(null)
     if (event.active.data.current?.type === "Column") {
       setActiveColumn(event.active.data.current.column)
       return;
     }
+    if (event.active.data.current?.type === "Task") {
+      setActiveTask(event.active.data.current.column)
+      return;
+    
   }
-  function onDragEnd(event: DragEndEvent) {
+}
+  function onDragEnd (event: DragEndEvent) {
     const { active, over} = event;
     if (!over) return;
 
-    const activeColumnId = active.id;
-    const overColumnId = over.id;
+    const activeId = active.id;
+    const overId = over.id;
     
-    if (activeColumnId === overColumnId) return;
+    if (activeId === overId) return;
 
     setColumns ((columns) => {
       const activeColumnIndex = columns.findIndex(
-        (col) => col.id === activeColumnId
+        (col) => col.id === activeId
       );
 
       const overColumnIndex = columns.findIndex(
-        (col) => col.id ===overColumnId
+        (col) => col.id === overId
       );
 
-      return arrayMove(columns, activeColumnIndex, overColumnIndex)
+      return arrayMove(columns, activeColumnIndex, overColumnIndex);
     });
   }
+  function onDragOver(event: DragOverEvent) {
+    const { active, over} = event;
+  if (!over) return;
   
-}
+  const activeId = active.id;
+  const overId = over.id;
+  
+  if (activeId === overId) return;
+  
+  const isActiveATask = active.data.current?.type === 'Task';
+  const isOverATask = over.data.current?.type === 'Task';
+    if(isActiveATask && isOverATask){
+      setTasks(tasks=> {
+        const activeIndex = tasks.findIndex(t => t.id === activeId)
 
+        const overIndex = tasks.findIndex(t => t.id === overId)
+        return arrayMove(tasks,  activeIndex, overIndex)
+      })
+    }
+  }
+}
+ 
 
 
 
 function generateId() {
   return Math.floor(Math.random() * 10001);
-}
+  }
 
 export default KarbanBord
