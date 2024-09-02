@@ -1,21 +1,4 @@
-import Dashboard from "../../../icons/Dashboard"
-import Docchek from "../../../icons/Doc-chek"
-import Ranking from "../../../icons/Ranking"
-import Timer from "../../../icons/Timer"
-
-
-
-
-
-
-function Slidebar() {
-  return (<>
-    <div className='
-    w-[250px]
-    min-h-screen
-    sticky
-     bg-white'>
-      <div className="flex p-6 "><svg width="119" height="54" viewBox="0 0 119 54" fill="none" xmlns="http://www.w3.org/2000/svg">
+<svg width="119" height="54" viewBox="0 0 119 54" fill="none" xmlns="http://www.w3.org/2000/svg">
 <g clip-path="url(#clip0_855_125)">
 <rect width="54" height="54" rx="12" fill="#29A19C"/>
 <g clip-path="url(#clip1_855_125)">
@@ -31,17 +14,4 @@ function Slidebar() {
 <rect width="42" height="42" fill="white" transform="translate(6 6)"/>
 </clipPath>
 </defs>
-</svg></div>
-<div className="pl-6">
-      <div className="menu pb-3"><Dashboard/>Dashboard</div>
-      <div className="menu pb-3"><Docchek/>Tasks</div>
-      <div className="menu pb-3"><Timer/>Timer</div>
-      <div className="text-black flex gap-2"><Ranking/>Statistics</div>
-      </div>
-      </div>
-     
-     </>
-  )
-}
-
-export default Slidebar
+</svg>

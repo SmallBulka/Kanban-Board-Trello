@@ -8,6 +8,7 @@ import { arrayMove, SortableContext } from '@dnd-kit/sortable';
 import { createPortal } from 'react-dom';
 import TaskCard from './TaskCard';
 
+
 function KarbanBord() {
   const [columns, setColumns] = useState<Column[]>([]);
   const columnsId = useMemo(() => columns.map((col) => col.id),
@@ -28,25 +29,29 @@ function KarbanBord() {
   )
 
   return (
+<>
+<div>
     <div className='
     m-auto
     flex
-    min-h-screen
-    w-full
-    items-center
 
+    p-6 
+
+px-[40px]
     overflow-x-auto
     overflow-y-hidden
-    px-[40px]
+    
     '>
+      
+
       <DndContext 
       sensors={sensors} 
       onDragStart={onDragStart} 
       onDragEnd={onDragEnd}
       onDragOver={onDragOver}
       >
-      <div className='m-auto flex gap-4'>
-        <div className='flex gap-4'>
+      <div className=' flex gap-4 flex-col-reverse'>
+        <div className='flex gap-4 '>
           <SortableContext items={columnsId}>
           {columns.map((col) =>(
             <ColumnContainer key={col.id} column={col} 
@@ -104,6 +109,8 @@ function KarbanBord() {
         )}
       </DndContext>
   </div>
+  </div>
+  </>
   );
 
   function createTask(columnId:Id){
@@ -140,6 +147,8 @@ return {...task,content};
   function deleteColumn(id: Id) {
     const filteredColumn = columns.filter((col) => col.id !== id);
     setColumns(filteredColumn);
+    const newTasks = tasks.filter((t) => t.columnId !== id)
+    setTasks(newTasks)
   }
   function updateColumn(id: Id, title: string) {
     const newColumns = columns.map((col) => {
@@ -194,12 +203,37 @@ return {...task,content};
   
   const isActiveATask = active.data.current?.type === 'Task';
   const isOverATask = over.data.current?.type === 'Task';
+    if (!isActiveATask) return;
+
     if(isActiveATask && isOverATask){
       setTasks(tasks=> {
         const activeIndex = tasks.findIndex(t => t.id === activeId)
 
         const overIndex = tasks.findIndex(t => t.id === overId)
+        
+          tasks[activeIndex].columnId = tasks[overIndex].columnId;
+        
+
+
+
         return arrayMove(tasks,  activeIndex, overIndex)
+      })
+    }
+
+    const isOverColumn = over.data.current?.type === 'Column'
+
+    if (isActiveATask && isOverColumn){
+      setTasks(tasks=> {
+        const activeIndex = tasks.findIndex(t => t.id === activeId)
+
+        
+        
+          tasks[activeIndex].columnId = overId;
+        
+
+
+
+        return arrayMove(tasks,  activeIndex, activeIndex)
       })
     }
   }
