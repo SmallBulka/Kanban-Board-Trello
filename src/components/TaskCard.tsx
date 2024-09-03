@@ -34,10 +34,10 @@ function TaskCard( {task, deleteTask, updateTask}: Props) {
 if (isDragging) {
   return <div ref={setNodeRef}
   style={style} className="bg-black
-   p-2.5 h-[100px] min-h-[100px] 
+   p-2.5 h-[100px] min-h-[100px]
    items-center flex text-left 
-   rounded-xl opacity-50
-   hover:ring-2 hover:ring-inset  hover:ring-[#29A19C] 
+   rounded-xl opacity-40
+   hover:ring-2 hover:ring-inset  hover:ring-[#29A19C]  
    curcor-grabs relative"/>
 }
 
@@ -58,7 +58,7 @@ if(editMode){
    curcor-grabs relative"
    >
     <textarea className="h-[90%] w-full resize-none border-none rounded bg-transparent text-white focus:outline-none"
-    value={task.content}
+    // value={task.content}
     autoFocus
     placeholder="Task content here"
     onBlur={toggleEditMode}

@@ -10,7 +10,7 @@ import Slidebar from './components/layout/sidebar/Slidebar';
 
 function App() {
   return (
-    <div className='flex'>
+    <div className=''>
     <Slidebar/>
   <KarbanBord/>
   

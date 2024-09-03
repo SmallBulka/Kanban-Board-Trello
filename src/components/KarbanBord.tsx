@@ -30,16 +30,19 @@ function KarbanBord() {
 
   return (
 <>
-<div>
+<div className=''>
     <div className='
-    m-auto
-    flex
-
-    p-6 
+   m-auto 
+ flex 
+min-h-screen
+w-full
+items-center
+overflow-x-auto
+overflow-y-hidden
+   
 
 px-[40px]
-    overflow-x-auto
-    overflow-y-hidden
+    
     
     '>
       
@@ -50,7 +53,7 @@ px-[40px]
       onDragEnd={onDragEnd}
       onDragOver={onDragOver}
       >
-      <div className=' flex gap-4 flex-col-reverse'>
+      <div className='m-40 flex gap-4'>
         <div className='flex gap-4 '>
           <SortableContext items={columnsId}>
           {columns.map((col) =>(
@@ -92,18 +95,19 @@ px-[40px]
       </div>
       {createPortal(
           <DragOverlay>
-            {activeColumn && <ColumnContainer column={activeColumn}
+            {activeColumn && (<ColumnContainer column={activeColumn}
             deleteColumn={deleteColumn}
             updateColumn={updateColumn}
             createTask={createTask}
             deleteTask={deleteTask}
             updateTask={updateTask}
             tasks={tasks.filter((task) => task.columnId === activeColumn.id)}
-            />}
+            />
+          )}
             {
-              activeTask&&<TaskCard task={activeTask}
+              activeTask&&(<TaskCard task={activeTask}
               deleteTask={deleteTask} updateTask={updateTask}/>
-            }
+            )}
           </DragOverlay>,
           document.body
         )}
@@ -166,7 +170,7 @@ return {...task,content};
       return;
     }
     if (event.active.data.current?.type === "Task") {
-      setActiveTask(event.active.data.current.column)
+      setActiveTask(event.active.data.current.task)
       return;
     
   }
