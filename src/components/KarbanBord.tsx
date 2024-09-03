@@ -77,7 +77,7 @@ px-[40px]
     min-w-[350px]
     cursor-pointer
     rounded-lg
-    bg-[#2C3440]
+    bg-gray-700
     p-4
     border-amber-200
     ring-[#29A19C]

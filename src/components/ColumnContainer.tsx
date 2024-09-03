@@ -51,7 +51,7 @@ function ColumnContainer( props: Props) {
     opacity-40
     min-h-[500px]
     rounded-md
-    bg-[#2C3440]
+    bg-[#393e46]
     border-2
     border-[#29A19C]
     
@@ -70,7 +70,7 @@ function ColumnContainer( props: Props) {
     w-[350px]
     min-h-[500px]
     rounded-md
-    bg-[#2C3440]
+    bg-[#393e46]
     flex
     flex-col
   "
@@ -85,7 +85,7 @@ function ColumnContainer( props: Props) {
     {...listeners}
     
     className="
-    bg-gray-950
+    bg-gray-800
     h-[60px]
     text-md
     cursor-grab
@@ -93,14 +93,14 @@ function ColumnContainer( props: Props) {
     rounded-b-none
     p-3
     font-bold
-    border-[#2C3440]
+    border-[#393e46]
     border-4
     flex
     justify-between
     items-center
     ">
         <div className="flex gap-2">
-        <div className="
+        {/* <div className="
         flex
         justify-center
         items-center
@@ -109,11 +109,11 @@ function ColumnContainer( props: Props) {
         py-1
         text-sm
         rounded-full
-        ">0</div>
+        "></div> */}
     {!editMode && column.title}
     {editMode && (
         <input 
-        className="bg-black focus:border-[#29A19C] border rounded outline-none px-2"
+        className="bg-[#232931] focus:border-[#29A19C] border rounded outline-none px-2"
         value={column.title}
         onChange={(e) => updateColumn(column.id, e.target.value)}
         autoFocus
@@ -134,7 +134,7 @@ function ColumnContainer( props: Props) {
     className="
     stroke-gray-500
     hover:stroke-white
-    hover:bg-[#2C3440]
+    hover:bg-[#232931]
     rounded
     px-1
     py-2
@@ -158,10 +158,10 @@ function ColumnContainer( props: Props) {
     {/* column  footer*/}
     
     <button className="flex gap-2 items-center
-    border-[#2C3440] border-2 rounded-md p-4
-    border-x-[#2C3440]
-    hover:bg-black hover:text-[#29A19C]
-    active:bg-black"
+    border-[#393e46] border-2 rounded-md p-4
+    border-x-[#393e46]
+    hover:bg-gray-800 hover:text-[#29A19C]
+    active:bg-[#232931]"
     onClick={()=> {
         createTask(column.id)
     }}> <div className="

@@ -50,7 +50,7 @@ if(editMode){
     {...listeners}
     onClick={toggleEditMode} 
     
-    className="bg-black
+    className="bg-gray-800
    p-2.5 h-[100px] min-h-[100px] 
    items-center flex text-left 
    rounded-xl 
@@ -78,7 +78,7 @@ if(editMode){
     {...listeners}
     onClick={toggleEditMode} 
     
-    className="bg-black
+    className="bg-gray-900
    p-2.5 h-[100px] min-h-[100px] 
    items-center flex text-left 
    rounded-xl 
