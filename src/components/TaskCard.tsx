@@ -3,6 +3,7 @@ import DelIcon from "../icons/DelIcon";
 import { Id, Task } from "../types";
 import { useSortable } from "@dnd-kit/sortable";
 import {CSS} from '@dnd-kit/utilities'
+import Check from "../icons/Check";
 
 
 interface Props {
@@ -79,7 +80,7 @@ if(editMode){
     onClick={toggleEditMode} 
     
     className="bg-gray-900
-   p-2.5 h-[100px] min-h-[100px] 
+   p-2.5 h-[100px] min-h-[100px] pr-10
    items-center flex text-left 
    rounded-xl 
    hover:ring-2 hover:ring-inset  hover:ring-[#29A19C] 
@@ -96,8 +97,13 @@ if(editMode){
    <button onClick={() => {
     deleteTask(task.id);
    }}
-   className="stroke-white absolute right-4 top-1/2 -translate-y-1/2 "><DelIcon/></button>)}
+   className="stroke-white absolute right-4 mt-2 top-1/2 -translate-y-1/ "><DelIcon/></button>
+   )}<button onClick={() => {
+    deleteTask(task.id);
+   }}
+   className="stroke-white absolute right-4  top-1/4 -translate-y-1/3 "><Check/></button>
    </div>
+   
   ); 
 }
 
